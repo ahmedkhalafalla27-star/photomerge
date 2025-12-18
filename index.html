@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Images into Equal Parts with JavaScript</title>
+</head>
+<body>
+    <h1>Merge Images with Equal Widths</h1>
+    <canvas id="canvas"></canvas>
+    <br/>
+    <!-- زر لتحميل الصورة المدمجة -->
+    <button id="downloadBtn">Download Merged Image</button>
+    
+    <script>
+        // تحميل الصور
+        const image1 = new Image();
+        const image2 = new Image();
+        const image3 = new Image();
+
+        image1.src = 'ah1.jpeg';  // ضع المسار الصحيح للصور
+        image2.src = 'ah2.jpeg';
+        image3.src = 'ah3.jpeg';
+
+        // عند تحميل جميع الصور، دمجها في canvas
+        image1.onload = image2.onload = image3.onload = function() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // تحديد الارتفاع الكلي بناءً على أعلى صورة
+            const maxHeight = Math.max(image1.height, image2.height, image3.height);
+
+            // تحديد العرض الكلي للصور المدمجة
+            const totalWidth = image1.width + image2.width + image3.width;
+            
+            // ضبط أبعاد canvas لتتناسب مع الصور
+            canvas.width = totalWidth;
+            canvas.height = maxHeight;
+
+            // تحديد عرض كل صورة بحيث تكون كل صورة تأخذ ثلث الصورة المدمجة
+            const thirdWidth = totalWidth / 3;
+
+            // رسم الصور على الـ canvas بحيث كل صورة تأخذ ثلث العرض الكلي
+            ctx.drawImage(image1, 0, 0, thirdWidth, maxHeight); // الصورة الأولى
+            ctx.drawImage(image2, thirdWidth, 0, thirdWidth, maxHeight); // الصورة الثانية
+            ctx.drawImage(image3, thirdWidth * 2, 0, thirdWidth, maxHeight); // الصورة الثالثة
+        };
+
+        // وظيفة لتحميل الصورة المدمجة
+        document.getElementById('downloadBtn').onclick = function() {
+            const canvas = document.getElementById('canvas');
+            const mergedImage = canvas.toDataURL('image/jpeg');  // تحويل الـ canvas إلى صورة بيانات
+            const link = document.createElement('a');
+            link.href = mergedImage;
+            link.download = 'merged_image.jpg';  // اسم الصورة المدمجة
+            link.click();  // محاكاة الضغط على الرابط لتحميل الصورة
+        };
+    </script>
+</body>
+</html>
+
